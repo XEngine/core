@@ -31,6 +31,7 @@ use Flarum\Event\UserWasRegistered;
 use Flarum\Event\UserWasRenamed;
 use Flarum\Foundation\Application;
 use Illuminate\Contracts\Hashing\Hasher;
+use Flarum\PVPGNHash;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
@@ -258,7 +259,7 @@ class User extends AbstractModel
      */
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = $value ? static::$hasher->make($value) : '';
+        $this->attributes['password'] = $value ? PVPGNHash::get_hash($value) : '';
     }
 
     /**
@@ -353,7 +354,8 @@ class User extends AbstractModel
         if ($valid !== null) {
             return $valid;
         }
-
+        var_dump($password);
+        var_dump($this->password);
         return static::$hasher->check($password, $this->password);
     }
 
